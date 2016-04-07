@@ -2922,6 +2922,14 @@ public final class ActivityManagerService extends ActivityManagerNative
 			if(DEBUG_LOWMEM)Slog.v("xzj", "----clean memory for start " + info.processName);	
 		}
 	}
+        if(("com.google.android.setupwizard".equals(processName)) && ("true".equals(SystemProperties.get("ro.config.low_ram", "false"))))
+	{
+		if(!"true".equals(SystemProperties.get("sys.cts_gts.status", "false")))
+		{
+			Log.d("xzj","--start com.google.android.setupwizard---");
+			SystemProperties.set("sys.cts_gts.status","true");
+		}
+	}
 
         // We don't have to do anything more if:
         // (1) There is an existing application record; and
