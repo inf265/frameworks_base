@@ -2463,12 +2463,19 @@ public final class ActivityManagerService extends ActivityManagerNative
     final void setFocusedActivityLocked(ActivityRecord r, String reason) {
         if (mFocusedActivity != r) {
             if (DEBUG_FOCUS) Slog.d(TAG, "setFocusedActivityLocked: r=" + r);
+            ActivityRecord last = mFocusedActivity;
             mFocusedActivity = r;
             if (r.task != null && r.task.voiceInteractor != null) {
                 startRunningVoiceLocked();
             } else {
                 finishRunningVoiceLocked();
             }
+	    //when user start home launcher,cleanup the complex app.
+            if(last != null && r != null && r.task != null && 
+                       r.task.taskType == ActivityRecord.HOME_ACTIVITY_TYPE && mGameMap.get(last.processName) != null){
+               killBackgroundProcesses(last.packageName,last.userId,"low-mem");
+               if(DEBUG_LOWMEM)Slog.v("lly", "----clean memory for stop " + last.processName);                                      
+           }
             mStackSupervisor.setFocusedStack(r, reason + " setFocusedActivity");
             if (r != null) {
                 mWindowManager.setFocusedApp(r.appToken, true);
@@ -5445,6 +5452,42 @@ Intent.CATEGORY_LAUNCHER) */&& startFlags==0){
                 mAllowLowerMemLevel = true;
                 updateOomAdjLocked();
                 doLowMemReportIfNeededLocked(null);
+            }
+        } finally {
+            Binder.restoreCallingIdentity(callingId);
+        }
+    }
+
+    public void killBackgroundProcesses(final String packageName,int userId,String reason) {
+        if (checkCallingPermission(android.Manifest.permission.KILL_BACKGROUND_PROCESSES)
+                != PackageManager.PERMISSION_GRANTED &&
+                checkCallingPermission(android.Manifest.permission.RESTART_PACKAGES)
+                        != PackageManager.PERMISSION_GRANTED) {
+            String msg = "Permission Denial: killBackgroundProcesses() from pid="
+                    + Binder.getCallingPid()
+                    + ", uid=" + Binder.getCallingUid()
+                    + " requires " + android.Manifest.permission.KILL_BACKGROUND_PROCESSES;
+            Slog.w(TAG, msg);
+            throw new SecurityException(msg);
+        }
+  
+      userId = handleIncomingUser(Binder.getCallingPid(), Binder.getCallingUid(),
+                userId, true, ALLOW_FULL_ONLY, "killBackgroundProcesses", null);
+        long callingId = Binder.clearCallingIdentity();
+        try {
+            IPackageManager pm = AppGlobals.getPackageManager();
+            synchronized(this) {
+                int appId = -1;
+                try {
+                    appId = UserHandle.getAppId(pm.getPackageUid(packageName, 0));
+                } catch (RemoteException e) {
+                }
+                if (appId == -1) {
+                    Slog.w(TAG, "Invalid packageName: " + packageName);
+                    return;
+                }
+                killPackageProcessesLocked(packageName, appId, userId,
+                        ProcessList.PERSISTENT_SERVICE_ADJ, false, false, true, false, "kill background");
             }
         } finally {
             Binder.restoreCallingIdentity(callingId);
@@ -15177,10 +15220,7 @@ Intent.CATEGORY_LAUNCHER) */&& startFlags==0){
             if (removeDyingProviderLocked(app, cpr, always) || always) {
                 // We left the provider in the launching list, need to
                 // restart it.
-			    if((("true".equals(SystemProperties.get("ro.config.low_ram", "false")))||("true".equals(SystemProperties.get("ro.mem_optimise.enable", "false")))) && (!"true".equals(SystemProperties.get("sys.cts_gts.status", "false"))))
-                    restart = false;
-                else
-                    restart = true;
+                restart = true;
             }
 
             cpr.provider = null;
@@ -15192,6 +15232,15 @@ Intent.CATEGORY_LAUNCHER) */&& startFlags==0){
         if (checkAppInLaunchingProvidersLocked(app, false)) {
             restart = true;
         }
+
+	if((("true".equals(SystemProperties.get("ro.config.low_ram", "false")))||("true".equals(SystemProperties.get("ro.mem_optimise.enable", "false")))) && (!"true".equals(SystemProperties.get("sys.cts_gts.status", "false"))))//if lowmem config
+	{
+		if((!"com.android.systemui".equals(app.processName))&&(!"android.process.media".equals(app.processName)))
+		{
+			if(DEBUG_LOWMEM)Slog.d("xzj","---low mem mode,skip restart crashed app= "+app);
+			restart = false;
+		}
+	}
 
         // Unregister from connected content providers.
         if (!app.conProviders.isEmpty()) {
@@ -18634,7 +18683,7 @@ Intent.CATEGORY_LAUNCHER) */&& startFlags==0){
                         } else {
                             numEmpty++;
                             if (numEmpty > emptyProcessLimit) {
-				if(!"com.android.phone".equals(app.processName))//do not kill phone, which would cause 3g dongle can not use
+				 if((!"com.android.phone".equals(app.processName))&&(!"android.process.media".equals(app.processName)))//do not kill phone, which would cause 3g dongle can not use
                                 	app.kill("empty #" + numEmpty, true);
                             }
                         }
