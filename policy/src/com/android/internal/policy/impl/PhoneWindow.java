@@ -2685,7 +2685,9 @@ public class PhoneWindow extends Window implements MenuBuilder.Callback {
             boolean changed = super.setFrame(l, t, r, b);		
 			//LOGD("------------setFrame------------l:"+l+",t:"+t+",r:"+r+",b:"+b+",changed:"+changed);
             if (changed) {
-				setWindowBackground(mBackgroundDrawable);
+			if( getContext().getResources().getConfiguration() != null &&  getContext().getResources().getConfiguration().enableMultiWindow()){
+					setWindowBackground(mBackgroundDrawable);
+				}
                 final Rect drawingBounds = mDrawingBounds;
                 getDrawingRect(drawingBounds);
 
