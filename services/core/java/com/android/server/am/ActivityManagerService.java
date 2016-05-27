@@ -18691,7 +18691,7 @@ Intent.CATEGORY_LAUNCHER) */&& startFlags==0){
                         } else {
                             numEmpty++;
                             if (numEmpty > emptyProcessLimit) {
-				 if((!"com.android.phone".equals(app.processName))&&(!"android.process.media".equals(app.processName)))//do not kill phone, which would cause 3g dongle can not use
+				 if((!"com.android.phone".equals(app.processName))&&(!"android.process.media".equals(app.processName))&&(!"com.cghs.stresstest".equals(app.processName)))//do not kill phone, which would cause 3g dongle can not use
                                 	app.kill("empty #" + numEmpty, true);
                             }
                         }
