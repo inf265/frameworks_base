@@ -11640,6 +11640,13 @@ Intent.CATEGORY_LAUNCHER) */&& startFlags==0){
                         for (i=0; i<N; i++) {
                             ApplicationInfo info
                                 = (ApplicationInfo)apps.get(i);
+                            if((("true".equals(SystemProperties.get("ro.config.low_ram", "false")))||("true".equals(SystemProperties.get("ro.mem_optimise.enable", "false")))) && (!"true".equals(SystemProperties.get("sys.cts_gts.status", "false"))))
+                            {
+                                if((mProcessMap.get(info.processName) != null)||(mServiceMap.get(info.processName) != null)){
+                                        if(DEBUG_LOWMEM)Slog.d("xzj","---low mem mode,system ready skip start persist app= "+info);
+                                        continue;
+                                }
+                            }
                             if (info != null &&
                                     !info.packageName.equals("android")) {
                                 addAppLocked(info, false, null /* ABI override */);
@@ -18572,7 +18579,7 @@ Intent.CATEGORY_LAUNCHER) */&& startFlags==0){
             emptyProcessLimit = ProcessList.computeEmptyProcessLimit(mProcessLimit);
             cachedProcessLimit = mProcessLimit - emptyProcessLimit;
         }
-	if((("true".equals(SystemProperties.get("ro.config.low_ram", "false")))||("true".equals(SystemProperties.get("ro.mem_optimise.enable", "false")))) && (!"true".equals(SystemProperties.get("sys.cts_gts.status", "false"))))
+	if(("true".equals(SystemProperties.get("ro.config.low_ram", "false"))) && (!"true".equals(SystemProperties.get("sys.cts_gts.status", "false"))))
 	{
 		emptyProcessLimit = cachedProcessLimit = 0;
 	}
