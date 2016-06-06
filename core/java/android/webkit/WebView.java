@@ -2293,6 +2293,7 @@ public class WebView extends AbsoluteLayout
     @Override
     public boolean onTouchEvent(MotionEvent event) {
             //$_rockchip_$_modify_by_huangjc:support double click for showContextMenu 
+if(getContext().getResources().getConfiguration().enableMultiWindow()){ 
             if(MotionEvent.ACTION_UP == event.getActionMasked()){
                 firClick = secClick;
                 secClick = (int)System.currentTimeMillis();
@@ -2301,6 +2302,7 @@ public class WebView extends AbsoluteLayout
                      return true;
                 }
              }
+}
         return mProvider.getViewDelegate().onTouchEvent(event);
     }
         private int firClick = 0;
