@@ -14062,11 +14062,12 @@ public class PackageManagerService extends IPackageManager.Stub
                 Log.e(TAG_MULTIWINDOW, "MultiWindow - initConfigFile dosen't exist: " + initConfigFile.getPath());
             }
         }
+        FileInputStream stream = null;
         if (mAppWindowModeMap == null && appWindowModeConfigFile.exists()) {
             mAppWindowModeMap = new HashMap<String,MultiWindowMode>();
             mAppWindowModeMap.clear();
             try {
-                FileInputStream stream = new FileInputStream(appWindowModeConfigFile);
+                stream = new FileInputStream(appWindowModeConfigFile);
                 XmlPullParser parser = Xml.newPullParser();
                 parser.setInput(stream, null);
                 int type;
@@ -14099,6 +14100,8 @@ public class PackageManagerService extends IPackageManager.Stub
                 Slog.w(TAG_MULTIWINDOW, "failed parsing " + appWindowModeConfigFile, e);
             } catch (IndexOutOfBoundsException e) {
                 Slog.w(TAG_MULTIWINDOW, "failed parsing " + appWindowModeConfigFile, e);
+            } finally {
+               IoUtils.closeQuietly(stream);
             }
         }
         if(pkgName == null || mAppWindowModeMap == null) return null;
