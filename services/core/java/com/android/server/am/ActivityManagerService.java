@@ -16612,8 +16612,15 @@ Intent.CATEGORY_LAUNCHER) */&& startFlags==0){
             }
             boolean replaced = replacePending && queue.replaceOrderedBroadcastLocked(r); 
             if (!replaced) {
-                               queue.enqueueOrderedBroadcastLocked(r);
-                               queue.scheduleBroadcastsLocked();
+		if((("true".equals(SystemProperties.get("ro.config.low_ram", "false")))||("true".equals(SystemProperties.get("ro.mem_optimise.enable", "false")))) 
+			&& (!"true".equals(SystemProperties.get("sys.cts_gts.status", "false")))){
+	    		if((r.intent.getAction() != null)&&(r.intent.getAction().contains("com.google.android.gms.INITIALIZE"))){
+				if(queue.replaceOrderedBroadcastLocked(r))
+				return ActivityManager.BROADCAST_SUCCESS; 
+			}
+		}
+            	queue.enqueueOrderedBroadcastLocked(r);
+                queue.scheduleBroadcastsLocked();
             }
         }
 
