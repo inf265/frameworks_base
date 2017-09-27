@@ -1910,7 +1910,6 @@ public class PhoneWindow extends Window implements MenuBuilder.Callback {
                 }
                 return true;
             }
-
         }
 
         return false;

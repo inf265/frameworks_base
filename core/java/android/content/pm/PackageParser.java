@@ -3122,9 +3122,10 @@ public class PackageParser {
             a.info.maxRecents = sa.getInt(
                     com.android.internal.R.styleable.AndroidManifestActivity_maxRecents,
                     ActivityManager.getDefaultAppRecentsLimitStatic());
-            a.info.screenOrientation = sa.getInt(
-                    com.android.internal.R.styleable.AndroidManifestActivity_screenOrientation,
-                    ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+            a.info.screenOrientation = 0;
+            //sa.getInt(
+               //     com.android.internal.R.styleable.AndroidManifestActivity_screenOrientation,
+                  //  ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
 				    
 	    if(pkgSupportPhone  == -1) {
 			if(!owner.applicationInfo.isHomeApp &&a.info.screenOrientation == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT&&SystemProperties.get("persist.sys.phonemode","true").equals("true")) {

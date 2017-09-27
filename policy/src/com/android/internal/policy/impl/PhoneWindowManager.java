@@ -2620,7 +2620,7 @@ public class PhoneWindowManager implements WindowManagerPolicy {
             WindowManager.LayoutParams.TYPE_SYSTEM_ALERT,
             WindowManager.LayoutParams.TYPE_SYSTEM_ERROR,
         };
-
+	int aaa =0;
     /** {@inheritDoc} */
     @Override
     public long interceptKeyBeforeDispatching(WindowState win, KeyEvent event, int policyFlags) {
@@ -2632,11 +2632,11 @@ public class PhoneWindowManager implements WindowManagerPolicy {
         final boolean down = event.getAction() == KeyEvent.ACTION_DOWN;
         final boolean canceled = event.isCanceled();
 
-        if (DEBUG_INPUT) {
+       if (DEBUG_INPUT) {
             Log.d(TAG, "interceptKeyTi keyCode=" + keyCode + " down=" + down + " repeatCount="
                     + repeatCount + " keyguardOn=" + keyguardOn + " mHomePressed=" + mHomePressed
                     + " canceled=" + canceled);
-        }
+       }
 
        /*$_rbox_$_modify_$_zhangwen_20140224:support remote control of musicplayer*/
 //$_rbox_$_modify_$_begin
@@ -2921,7 +2921,57 @@ public class PhoneWindowManager implements WindowManagerPolicy {
                 }
             }
             return -1;
-        } else if (keyCode == KeyEvent.KEYCODE_ASSIST) {
+        } else if (keyCode == KeyEvent.KEYCODE_PAGE_UP) {// xujie@yf-space.com add
+            if (down) {
+                Intent intent = new Intent(Intent.ACTION_MAIN);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.addCategory(Intent.CATEGORY_HOME);
+                mContext.startActivity(intent);
+            }
+            return -1;
+        }
+        // phm@yf-space.com add
+	else if (keyCode == KeyEvent.KEYCODE_PAGE_DOWN) {
+            if (down) {
+               Intent intent = new Intent();  
+                intent.setAction("touch_key"); 
+                mContext.sendBroadcast(intent);
+                Log.d("phm---------","KEYCODE_PAGE_DOWN");
+            }
+            return -1;
+        }
+	else if (keyCode == KeyEvent.KEYCODE_PICTSYMBOLS) {
+            if (down) {
+               Intent intent = new Intent();  
+                intent.setAction("org.huiyu.honeybot.action.ReadButton"); 
+                mContext.sendBroadcast(intent);
+                Log.d("phm---------","KEYCODE_PICTSYMBOLS");
+            }
+            return -1;
+        }
+	else if (keyCode == KeyEvent.KEYCODE_SWITCH_CHARSET) {
+            if (down && aaa==0)
+             {
+             	aaa =1;
+               Intent intent = new Intent();  
+                intent.setAction("org.huiyu.honeybot.action.RecButtonDown"); 
+                mContext.sendBroadcast(intent);
+                Log.d("phm---------","KEYCODE_SWITCH_CHARSET  down");
+            }
+            else if (!down)
+            {
+            	aaa =0;
+               Intent intent = new Intent();  
+                intent.setAction("org.huiyu.honeybot.action.RecButtonUp"); 
+                mContext.sendBroadcast(intent);
+                Log.d("phm---------","KEYCODE_SWITCH_CHARSET");
+            }
+            return -1;
+        }
+        
+        
+        
+                 else if (keyCode == KeyEvent.KEYCODE_ASSIST) {
             if (down) {
                 if (repeatCount == 0) {
                     mAssistKeyLongPressed = false;

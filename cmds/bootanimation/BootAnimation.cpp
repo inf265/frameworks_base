@@ -14,8 +14,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-#define LOG_NDEBUG 0
+ 
+#define LOG_NDEBUG 1
 #define LOG_TAG "BootAnimation"
 
 #define ENABLE_DEBUG_LOG
@@ -31,7 +31,8 @@
 #include <fcntl.h>
 #include <utils/misc.h>
 #include <signal.h>
-
+#include <media/AudioSystem.h>
+#include <media/IMediaHTTPService.h>
 #include <cutils/properties.h>
 
 #include <androidfw/AssetManager.h>
@@ -66,9 +67,11 @@
 #define SYSTEM_ENCRYPTED_BOOTANIMATION_FILE "/system/media/bootanimation-encrypted.zip"
 #define EXIT_PROP_NAME "service.bootanim.exit"
 #define FIXED_ONE 1
-
+const char* startup_ring = "/system/media/audio/startup.wav";
+#define SHUTDOWNMUSIC_FILE "/system/media/audio/shutdown.wav"
+const char* shutdown_ring = "/system/media/audio/shutdown.wav";
 #define USER_BOOTANIMATION_FILE "/data/local/bootanimation.zip"
-
+#define BOOTMUSIC_FILE "/system/media/audio/boot.ogg"
 #define USER_SHUTDOWN_ANIMATION_FILE "/data/local/shutdownanimation.zip"
 #define SYSTEM_SHUTDOWN_ANIMATION_FILE "/system/media/shutdownanimation.zip"
 extern "C" int clock_nanosleep(clockid_t clock_id, int flags,
@@ -114,6 +117,37 @@ BootAnimation::BootAnimation(bool shutdown) : Thread(false), mZip(NULL)
         {
 		    mReverseAxis=true;
 	    }
+    }
+}
+void BootAnimation::playMusic(){
+
+    if(!mShutdown){
+        // play startup rington
+        if(access(startup_ring, R_OK) == 0)
+        {
+            ALOGD("startup_ring file can access");
+            property_set("ctl.start", "startup_rington");
+            ALOGD("ctl.start startup_rington");
+        }
+        else
+        {
+            ALOGD("startup_ring file can not access");
+        }
+    }else{
+        AudioSystem::setStreamVolumeIndex(AUDIO_STREAM_MUSIC, 1, AUDIO_DEVICE_OUT_DEFAULT);
+        int volumnIndex;
+        AudioSystem::getStreamVolumeIndex(AUDIO_STREAM_RING, &volumnIndex, AUDIO_DEVICE_OUT_DEFAULT);
+
+        sp<MediaPlayer> mp = new MediaPlayer();
+        if((0 == access(SHUTDOWNMUSIC_FILE, F_OK)) && mp != NULL){
+            mp->setDataSource(NULL, SHUTDOWNMUSIC_FILE, NULL);
+            mp->setAudioStreamType(AUDIO_STREAM_ENFORCED_AUDIBLE);
+            mp->prepare();
+            mp->seekTo(0);
+            mp->start();
+        }else{
+            ALOGE("shutdown music file can not access");
+        }
     }
 }
 
@@ -499,6 +533,11 @@ bool BootAnimation::android()
     initTexture(&mAndroid[1], mAssets, "images/android-logo-shine.png");
     mBMPWidth = mTexWidth = mBMPHeight = mTexHeight = 1;
     getTexCoordinate();
+    
+ // to add startup music
+    #ifdef BOOTMUSIC_FILE
+    playMusic();
+    #endif
 
     // clear screen
     glShadeModel(GL_FLAT);
@@ -507,7 +546,7 @@ bool BootAnimation::android()
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     float ratio = mWidth / mHeight;
-    // glFrustumf(-ratio, ratio, -1, 1, 0, 1);
+    glFrustumf(-ratio, ratio, -1, 1, 0, 1);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     glOrthof(0, mWidth, mHeight, 0, 0, 1);
@@ -722,6 +761,10 @@ bool BootAnimation::readFile(const char* name, String8& outString)
 bool BootAnimation::movie()
 {
     String8 desString;
+    
+	#ifdef BOOTMUSIC_FILE
+    playMusic();
+   #endif
 
     if (!readFile("desc.txt", desString)) {
         return false;
@@ -844,7 +887,7 @@ bool BootAnimation::movie()
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     float ratio = mWidth / mHeight;
-    // glFrustumf(-ratio, ratio, -1, 1, 0, 1);
+   // glFrustumf(-ratio, ratio, -1, 1, 0, 1);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     glOrthof(0, mWidth, mHeight, 0, 0, 1);

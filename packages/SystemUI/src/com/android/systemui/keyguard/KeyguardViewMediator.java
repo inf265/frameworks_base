@@ -215,7 +215,8 @@ public class KeyguardViewMediator extends SystemUI {
     /**
      * External apps (like the phone app) can tell us to disable the keygaurd.
      */
-    private boolean mExternallyEnabled = true;
+    //private boolean mExternallyEnabled = true;
+    private boolean mExternallyEnabled = false;
 
     /**
      * Remember if an external call to {@link #setKeyguardEnabled} with value
@@ -226,7 +227,7 @@ public class KeyguardViewMediator extends SystemUI {
 
     // cached value of whether we are showing (need to know this to quickly
     // answer whether the input should be restricted)
-    private boolean mShowing;
+    private boolean mShowing = false;
 
     /** Cached value of #isInputRestricted */
     private boolean mInputRestricted;
@@ -539,7 +540,7 @@ public class KeyguardViewMediator extends SystemUI {
         mLockPatternUtils.setCurrentUser(ActivityManager.getCurrentUser());
 
         // Assume keyguard is showing (unless it's disabled) until we know for sure...
-        setShowingLocked(!shouldWaitForProvisioning() && !mLockPatternUtils.isLockScreenDisabled());
+       // setShowingLocked(!shouldWaitForProvisioning() && !mLockPatternUtils.isLockScreenDisabled());
         mTrustManager.reportKeyguardShowingChanged();
 
         mStatusBarKeyguardViewManager = new StatusBarKeyguardViewManager(mContext,
@@ -1126,7 +1127,7 @@ public class KeyguardViewMediator extends SystemUI {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case SHOW:
-                    handleShow((Bundle) msg.obj);
+                    //handleShow((Bundle) msg.obj);
                     break;
                 case HIDE:
                     handleHide();

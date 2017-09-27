@@ -31,7 +31,7 @@ import java.io.FileOutputStream;
 
 public class LightsService extends SystemService {
     static final String TAG = "LightsService";
-    static final boolean DEBUG = false;
+    static final boolean DEBUG = true; 
 
     final LightImpl mLights[] = new LightImpl[LightsManager.LIGHT_ID_COUNT];
 
@@ -99,6 +99,8 @@ public class LightsService extends SystemService {
         }
 
         private void setLightLocked(int color, int mode, int onMS, int offMS, int brightnessMode) {
+        
+                        
             if (color != mColor || mode != mMode || onMS != mOnMS || offMS != mOffMS) {
                 if (DEBUG) Slog.v(TAG, "setLight #" + mId + ": color=#"
                         + Integer.toHexString(color));

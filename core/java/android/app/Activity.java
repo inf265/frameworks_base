@@ -5100,12 +5100,12 @@ public class Activity extends ContextThemeWrapper
         if (mParent == null) {
             try {
                 ActivityManagerNative.getDefault().setRequestedOrientation(
-                        mToken, requestedOrientation);
+                       mToken, ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
             } catch (RemoteException e) {
                 // Empty
             }
         } else {
-            mParent.setRequestedOrientation(requestedOrientation);
+            mParent.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         }
     }
 
@@ -5130,7 +5130,7 @@ public class Activity extends ContextThemeWrapper
         } else {
             return mParent.getRequestedOrientation();
         }
-        return ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED;
+        return ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
     }
 
     /**

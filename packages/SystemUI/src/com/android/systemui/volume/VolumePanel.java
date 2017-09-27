@@ -260,6 +260,8 @@ public class VolumePanel extends Handler implements DemoMode {
         MediaController controller;
         ViewGroup group;
         ImageView icon;
+        ImageView volUp;
+        ImageView volDown;
         SeekBar seekbarView;
         TextView suppressorView;
         View divider;
@@ -441,6 +443,8 @@ public class VolumePanel extends Handler implements DemoMode {
         mPanel = (ViewGroup) mView.findViewById(com.android.systemui.R.id.visible_panel);
         mSliderPanel = (ViewGroup) mView.findViewById(com.android.systemui.R.id.slider_panel);
         mZenPanel = (ZenModePanel) mView.findViewById(com.android.systemui.R.id.zen_mode_panel);
+        // don't show
+        mZenPanel.setVisibility(View.GONE);
         initZenModePanel();
 
         mToneGenerators = new ToneGenerator[AudioSystem.getNumStreamTypes()];
@@ -677,6 +681,8 @@ public class VolumePanel extends Handler implements DemoMode {
                 }
                 sc.iconSuppressedRes = com.android.systemui.R.drawable.ic_ringer_mute;
             }
+            // gone icon
+            sc.icon.setVisibility(View.GONE);
             sc.seekbarView = (SeekBar) sc.group.findViewById(com.android.systemui.R.id.seekbar);
             sc.suppressorView =
                     (TextView) sc.group.findViewById(com.android.systemui.R.id.suppressor);
@@ -703,6 +709,25 @@ public class VolumePanel extends Handler implements DemoMode {
             sc.seekbarView.setMax(getStreamMaxVolume(streamType) + plusOne);
             sc.seekbarView.setOnSeekBarChangeListener(mSeekListener);
             sc.seekbarView.setTag(sc);
+            sc.volUp = (ImageView) sc.group.findViewById(com.android.systemui.R.id.volume_up);
+            sc.volDown = (ImageView) sc.group.findViewById(com.android.systemui.R.id.volume_down);
+            sc.volUp.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int index = getStreamVolume(sc.streamType);
+                    setStreamVolume(sc, ++index,
+                            AudioManager.FLAG_SHOW_UI | AudioManager.FLAG_VIBRATE);
+                }
+            });
+            sc.volDown.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int index = getStreamVolume(sc.streamType);
+                    setStreamVolume(sc, --index,
+                            AudioManager.FLAG_SHOW_UI | AudioManager.FLAG_VIBRATE);
+                }
+            });
+
             mStreamControls.put(streamType, sc);
         }
     }

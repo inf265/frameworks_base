@@ -3552,7 +3552,14 @@ public class AudioService extends IAudioService.Stub {
                         continue;
                     }
 
+                // ignore settings for fixed volume devices: volume should always be at max or 0
+                if ((mStreamVolumeAlias[mStreamType] == AudioSystem.STREAM_MUSIC) &&
+                        ((device & mFixedVolumeDevices) != 0)) {
+                    mIndex.put(device, (index != 0) ? mIndexMax : 0);
+                } else {
                     mIndex.put(device, getValidIndex(10 * index));
+                }
+
                 }
             }
         }
