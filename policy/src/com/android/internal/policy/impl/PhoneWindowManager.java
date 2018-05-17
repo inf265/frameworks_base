@@ -2630,6 +2630,7 @@ public class PhoneWindowManager implements WindowManagerPolicy {
             WindowManager.LayoutParams.TYPE_SYSTEM_ERROR,
         };
 	int aaa =0;
+	int ccc =0;
     /** {@inheritDoc} */
     @Override
     public long interceptKeyBeforeDispatching(WindowState win, KeyEvent event, int policyFlags) {
@@ -2978,7 +2979,28 @@ public class PhoneWindowManager implements WindowManagerPolicy {
             return -1;
         }
         
-        
+    
+    	else if (keyCode == KeyEvent.KEYCODE_F2) {
+            if (down) {
+
+                Log.d("phm---------","KEYCODE_F2");
+            }
+            return -1;
+        }
+	else if (keyCode == KeyEvent.KEYCODE_F1) {
+            if (down && ccc==0)
+             {
+             	aaa =1;
+                Log.d("phm---------","KEYCODE_F1  down");
+            }
+            else if (!down)
+            {
+            	ccc =0;
+                Log.d("phm---------","KEYCODE_F1  !down");
+            }
+            return -1;
+        }
+            
         
                  else if (keyCode == KeyEvent.KEYCODE_ASSIST) {
             if (down) {
