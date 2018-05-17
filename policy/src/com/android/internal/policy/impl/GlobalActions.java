@@ -76,7 +76,6 @@ import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -192,16 +191,11 @@ class GlobalActions implements DialogInterface.OnDismissListener, DialogInterfac
         mDialog = createDialog();
         prepareDialog();
 
-        Log.e(TAG, "----->>>>> getCount: " + mAdapter.getCount());
-
         // If we only have 1 item and it's a simple press action, just do this action.
         if (mAdapter.getCount() == 1
                 && mAdapter.getItem(0) instanceof SinglePressAction
                 && !(mAdapter.getItem(0) instanceof LongPressAction)) {
             ((SinglePressAction) mAdapter.getItem(0)).onPress();
-        } else if (mAdapter.getCount() == 2) {
-            Toast.makeText(mContext, "正在关机...", Toast.LENGTH_SHORT).show();
-            mWindowManagerFuncs.shutdown(false /* confirm */);
         } else {
             WindowManager.LayoutParams attrs = mDialog.getWindow().getAttributes();
             attrs.setTitle("GlobalActions");

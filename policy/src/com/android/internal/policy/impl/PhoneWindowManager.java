@@ -1006,14 +1006,17 @@ public class PhoneWindowManager implements WindowManagerPolicy {
             ", mScreenshotChordVolumeDownKeyTriggered=" + mScreenshotChordVolumeDownKeyTriggered);
         if (!mPowerKeyHandled) {
             if (interactive) {
-              Log.d(TAG,  "interceptPowerKeyDown =================  =======");
+              Log.d(TAG,  "interceptPowerKeyDown ================= event.getDownTime() ======="+event.getDownTime());
                 // When interactive, we're already awake.
                 // Wait for a long press or for the button to be released to decide what to do.
+                
+                //phm222
+               
                 if (hasLongPressOnPowerBehavior()) {
                     Message msg = mHandler.obtainMessage(MSG_POWER_LONG_PRESS);
                     msg.setAsynchronous(true);
                     mHandler.sendMessageDelayed(msg,
-                            ViewConfiguration.get(mContext).getDeviceGlobalActionKeyTimeout());
+                            3000);
                 }
             } else {
                 wakeUpFromPowerKey(event.getDownTime());
@@ -1154,6 +1157,7 @@ public class PhoneWindowManager implements WindowManagerPolicy {
     private void powerLongPress() {
         try{throw new RuntimeException("======");}catch(Exception e){e.printStackTrace();}
         final int behavior = getResolvedLongPressOnPowerBehavior();
+        /*
         switch (behavior) {
         case LONG_PRESS_POWER_NOTHING:
             break;
@@ -1172,6 +1176,11 @@ public class PhoneWindowManager implements WindowManagerPolicy {
             mWindowManagerFuncs.shutdown(behavior == LONG_PRESS_POWER_SHUT_OFF);
             break;
         }
+        */
+            mPowerKeyHandled = true;
+            performHapticFeedbackLw(null, HapticFeedbackConstants.LONG_PRESS, false);
+            sendCloseSystemWindows(SYSTEM_DIALOG_REASON_GLOBAL_ACTIONS);
+            mWindowManagerFuncs.shutdown(false);
     }
 
     private int getResolvedLongPressOnPowerBehavior() {

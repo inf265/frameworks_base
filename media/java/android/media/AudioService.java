@@ -3320,7 +3320,7 @@ public class AudioService extends IAudioService.Stub {
                     AudioSystem.isStreamActive(AudioSystem.STREAM_RING,
                             StreamOverride.sDelayMs)) {
                 if (DEBUG_VOL) Log.v(TAG, "getActiveStreamType: Forcing STREAM_NOTIFICATION");
-                return AudioSystem.STREAM_NOTIFICATION;
+                return AudioSystem.STREAM_MUSIC;
             } else if (suggestedStreamType == AudioManager.USE_DEFAULT_STREAM_TYPE) {
                 if (isAfMusicActiveRecently(StreamOverride.sDelayMs)) {
                     if (DEBUG_VOL) Log.v(TAG, "getActiveStreamType: forcing STREAM_MUSIC");
@@ -3328,7 +3328,7 @@ public class AudioService extends IAudioService.Stub {
                 } else {
                     if (DEBUG_VOL) Log.v(TAG,
                             "getActiveStreamType: using STREAM_NOTIFICATION as default");
-                    return AudioSystem.STREAM_NOTIFICATION;
+                    return AudioSystem.STREAM_MUSIC;
                 }
             }
             break;

@@ -45,7 +45,7 @@ import java.util.ArrayList;
  */
 public final class DisplayManagerGlobal {
     private static final String TAG = "DisplayManager";
-    private static final boolean DEBUG = true;
+    private static final boolean DEBUG = false;
 
     // True if display info and display ids should be cached.
     //
