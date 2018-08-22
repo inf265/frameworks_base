@@ -1006,17 +1006,14 @@ public class PhoneWindowManager implements WindowManagerPolicy {
             ", mScreenshotChordVolumeDownKeyTriggered=" + mScreenshotChordVolumeDownKeyTriggered);
         if (!mPowerKeyHandled) {
             if (interactive) {
-              Log.d(TAG,  "interceptPowerKeyDown ================= event.getDownTime() ======="+event.getDownTime());
+              Log.d(TAG,  "interceptPowerKeyDown =================  =======");
                 // When interactive, we're already awake.
                 // Wait for a long press or for the button to be released to decide what to do.
-                
-                //phm222
-               
                 if (hasLongPressOnPowerBehavior()) {
                     Message msg = mHandler.obtainMessage(MSG_POWER_LONG_PRESS);
                     msg.setAsynchronous(true);
                     mHandler.sendMessageDelayed(msg,
-                            3000);
+                            ViewConfiguration.get(mContext).getDeviceGlobalActionKeyTimeout());
                 }
             } else {
                 wakeUpFromPowerKey(event.getDownTime());
@@ -1157,7 +1154,6 @@ public class PhoneWindowManager implements WindowManagerPolicy {
     private void powerLongPress() {
         try{throw new RuntimeException("======");}catch(Exception e){e.printStackTrace();}
         final int behavior = getResolvedLongPressOnPowerBehavior();
-        /*
         switch (behavior) {
         case LONG_PRESS_POWER_NOTHING:
             break;
@@ -1176,11 +1172,6 @@ public class PhoneWindowManager implements WindowManagerPolicy {
             mWindowManagerFuncs.shutdown(behavior == LONG_PRESS_POWER_SHUT_OFF);
             break;
         }
-        */
-            mPowerKeyHandled = true;
-            performHapticFeedbackLw(null, HapticFeedbackConstants.LONG_PRESS, false);
-            sendCloseSystemWindows(SYSTEM_DIALOG_REASON_GLOBAL_ACTIONS);
-            mWindowManagerFuncs.shutdown(false);
     }
 
     private int getResolvedLongPressOnPowerBehavior() {
@@ -2629,8 +2620,7 @@ public class PhoneWindowManager implements WindowManagerPolicy {
             WindowManager.LayoutParams.TYPE_SYSTEM_ALERT,
             WindowManager.LayoutParams.TYPE_SYSTEM_ERROR,
         };
-	int aaa =0;
-	int ccc =0;
+
     /** {@inheritDoc} */
     @Override
     public long interceptKeyBeforeDispatching(WindowState win, KeyEvent event, int policyFlags) {
@@ -2931,78 +2921,7 @@ public class PhoneWindowManager implements WindowManagerPolicy {
                 }
             }
             return -1;
-        } else if (keyCode == KeyEvent.KEYCODE_PAGE_UP) {// xujie@yf-space.com add
-            if (down) {
-                Intent intent = new Intent(Intent.ACTION_MAIN);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent.addCategory(Intent.CATEGORY_HOME);
-                mContext.startActivity(intent);
-            }
-            return -1;
-        }
-        // phm@yf-space.com add
-	else if (keyCode == KeyEvent.KEYCODE_PAGE_DOWN) {
-            if (down) {
-               Intent intent = new Intent();  
-                intent.setAction("touch_key"); 
-                mContext.sendBroadcast(intent);
-                Log.d("phm---------","KEYCODE_PAGE_DOWN");
-            }
-            return -1;
-        }
-	else if (keyCode == KeyEvent.KEYCODE_PICTSYMBOLS) {
-            if (down) {
-               Intent intent = new Intent();  
-                intent.setAction("org.huiyu.honeybot.action.ReadButton"); 
-                mContext.sendBroadcast(intent);
-                Log.d("phm---------","KEYCODE_PICTSYMBOLS");
-            }
-            return -1;
-        }
-	else if (keyCode == KeyEvent.KEYCODE_SWITCH_CHARSET) {
-            if (down && aaa==0)
-             {
-             	aaa =1;
-               Intent intent = new Intent();  
-                intent.setAction("org.huiyu.honeybot.action.RecButtonDown"); 
-                mContext.sendBroadcast(intent);
-                Log.d("phm---------","KEYCODE_SWITCH_CHARSET  down");
-            }
-            else if (!down)
-            {
-            	aaa =0;
-               Intent intent = new Intent();  
-                intent.setAction("org.huiyu.honeybot.action.RecButtonUp"); 
-                mContext.sendBroadcast(intent);
-                Log.d("phm---------","KEYCODE_SWITCH_CHARSET");
-            }
-            return -1;
-        }
-        
-    
-    	else if (keyCode == KeyEvent.KEYCODE_F2) {
-            if (down) {
-
-                Log.d("phm---------","KEYCODE_F2");
-            }
-            return -1;
-        }
-	else if (keyCode == KeyEvent.KEYCODE_F1) {
-            if (down && ccc==0)
-             {
-             	aaa =1;
-                Log.d("phm---------","KEYCODE_F1  down");
-            }
-            else if (!down)
-            {
-            	ccc =0;
-                Log.d("phm---------","KEYCODE_F1  !down");
-            }
-            return -1;
-        }
-            
-        
-                 else if (keyCode == KeyEvent.KEYCODE_ASSIST) {
+        } else if (keyCode == KeyEvent.KEYCODE_ASSIST) {
             if (down) {
                 if (repeatCount == 0) {
                     mAssistKeyLongPressed = false;

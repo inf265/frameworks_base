@@ -69,7 +69,7 @@ final class ProcessList {
     // This is a process holding the home application -- we want to try
     // avoiding killing it, even if it would normally be in the background,
     // because the user interacts with it so much.
-    static final int HOME_APP_ADJ = -16;
+    static final int HOME_APP_ADJ = 6;
 
     // This is a process holding an application service -- killing it will not
     // have much of an impact as far as the user is concerned.

@@ -18688,6 +18688,20 @@ package android.nfc {
 
 package android.nfc.cardemulation {
 
+  public final class AidGroup implements android.os.Parcelable {
+    ctor public AidGroup(java.util.List<java.lang.String>, java.lang.String);
+    ctor public AidGroup(java.lang.String, java.lang.String);
+    method public static android.nfc.cardemulation.AidGroup createFromXml(org.xmlpull.v1.XmlPullParser) throws java.io.IOException, org.xmlpull.v1.XmlPullParserException;
+    method public int describeContents();
+    method public java.util.List<java.lang.String> getAids();
+    method public java.lang.String getCategory();
+    method public java.lang.String getDescription();
+    method public void writeAsXml(org.xmlpull.v1.XmlSerializer) throws java.io.IOException;
+    method public void writeToParcel(android.os.Parcel, int);
+    field public static final android.os.Parcelable.Creator<android.nfc.cardemulation.AidGroup> CREATOR;
+    field public static final int MAX_NUM_AIDS = 256; // 0x100
+  }
+
   public final class CardEmulation {
     method public boolean categoryAllowsForegroundPreference(java.lang.String);
     method public java.util.List<java.lang.String> getAidsForService(android.content.ComponentName, java.lang.String);
@@ -39532,6 +39546,132 @@ package com.android.internal.util {
 
   public abstract interface Predicate {
     method public abstract boolean apply(T);
+  }
+
+}
+
+package com.nxp.nfc {
+
+  public abstract interface INfcDta implements android.os.IInterface {
+    method public abstract boolean snepDtaCmd(java.lang.String, java.lang.String, int, int, int, int) throws android.os.RemoteException;
+  }
+
+  public final class NfcDta {
+    ctor public NfcDta(com.nxp.nfc.INfcDta);
+    method public boolean snepDtaCmd(java.lang.String, java.lang.String, int, int, int, int);
+  }
+
+  public final class NxpConstants {
+    ctor public NxpConstants();
+    field public static final java.lang.String ACTION_CHECK_X509 = "org.simalliance.openmobileapi.service.ACTION_CHECK_X509";
+    field public static final java.lang.String ACTION_CHECK_X509_RESULT = "org.simalliance.openmobileapi.service.ACTION_CHECK_X509_RESULT";
+    field public static final java.lang.String ACTION_CONNECTIVITY_EVENT_DETECTED = "com.nxp.action.CONNECTIVITY_EVENT_DETECTED";
+    field public static final java.lang.String ACTION_EMVCO_MULTIPLE_CARD_DETECTED = "com.nxp.action.EMVCO_MULTIPLE_CARD_DETECTED";
+    field public static final java.lang.String ACTION_GSMA_ENABLE_NFC = "com.gsma.services.nfc.action.ENABLE_NFC";
+    field public static final java.lang.String ACTION_GSMA_ENABLE_SET_FLAG = "com.gsma.services.nfc.action.ENABLE_NFC_SET_FALG";
+    field public static final java.lang.String ACTION_MULTI_EVT_TRANSACTION = "com.gsma.services.nfc.action.TRANSACTION_EVENT";
+    field public static final java.lang.String ACTION_SWP_READER_ACTIVATED = "com.nxp.nfc_extras.ACTION_SWP_READER_ACTIVATED";
+    field public static final java.lang.String ACTION_SWP_READER_DEACTIVATED = "com.nxp.nfc_extras.ACTION_SWP_READER_DEACTIVATED";
+    field public static final java.lang.String ACTION_SWP_READER_REQUESTED = "com.nxp.nfc_extras.ACTION_SWP_READER_REQUESTED";
+    field public static final java.lang.String ACTION_SWP_READER_REQUESTED_FAILED = "com.nxp.nfc_extras.ACTION_SWP_READER_REQUESTED_FAILED";
+    field public static final java.lang.String ACTION_SWP_READER_TAG_PRESENT = "com.nxp.nfc_extras.ACTION_SWP_READER_TAG_PRESENT";
+    field public static final java.lang.String ACTION_SWP_READER_TAG_REMOVE = "com.nxp.nfc_extras.ACTION_SWP_READER_TAG_REMOVE";
+    field public static final java.lang.String ACTION_TRANSACTION_DETECTED = "com.nxp.action.TRANSACTION_DETECTED";
+    field public static final java.lang.String EXTRA_AID = "com.nxp.extra.AID";
+    field public static final java.lang.String EXTRA_DATA = "com.nxp.extra.DATA";
+    field public static final java.lang.String EXTRA_GSMA_AID = "com.gsma.services.nfc.extra.AID";
+    field public static final java.lang.String EXTRA_GSMA_DATA = "com.gsma.services.nfc.extra.DATA";
+    field public static final java.lang.String EXTRA_PKG = "org.simalliance.openmobileapi.service.extra.EXTRA_PKG";
+    field public static final java.lang.String EXTRA_RESULT = "org.simalliance.openmobileapi.service.extra.EXTRA_RESULT";
+    field public static final java.lang.String EXTRA_SE_NAME = "org.simalliance.openmobileapi.service.EXTRA_SE_NAME";
+    field public static final java.lang.String EXTRA_SOURCE = "com.nxp.extra.SOURCE";
+    field public static final java.lang.String HOST_ID = "com.nxp.host.ID";
+    field public static final java.lang.String PERMISSIONS_TRANSACTION_EVENT = "com.gsma.service.nfc.permission.TRANSACTION_EVENT";
+    field public static final java.lang.String SET_PACKAGE_NAME = "org.simalliance.openmobileapi.service";
+    field public static final java.lang.String SMART_MX_ID = "com.nxp.smart_mx.ID";
+    field public static final java.lang.String UICC_ID = "com.nxp.uicc.ID";
+  }
+
+  public final class NxpNfcAdapter {
+    method public void DefaultRouteSet(java.lang.String, boolean, boolean, boolean) throws java.io.IOException;
+    method public void MifareCLTRouteSet(java.lang.String, boolean, boolean, boolean) throws java.io.IOException;
+    method public void MifareDesfireRouteSet(java.lang.String, boolean, boolean, boolean) throws java.io.IOException;
+    method public deprecated void activeSwp() throws java.io.IOException;
+    method public com.nxp.nfc.NfcDta createNfcDta();
+    method public void deSelectedSecureElement(java.lang.String) throws java.io.IOException;
+    method public java.lang.String[] getActiveSecureElementList(java.lang.String) throws java.io.IOException;
+    method public java.lang.String[] getAvailableSecureElementList(java.lang.String) throws java.io.IOException;
+    method public java.lang.String getDefaultSelectedSecureElement(java.lang.String) throws java.io.IOException;
+    method public byte[] getFwVersion() throws java.io.IOException;
+    method public java.util.Map<java.lang.String, java.lang.Integer> getServicesAidCacheSize(int, java.lang.String) throws java.io.IOException;
+    method public void selectDefaultSecureElement(java.lang.String, java.lang.String) throws java.io.IOException;
+  }
+
+}
+
+package com.nxp.nfc.gsma.internal {
+
+  public class NxpHandset {
+    ctor public NxpHandset();
+    method public void enableMultiEvt_transactionReception();
+    method public boolean getNxpProperty(int);
+    method public int getNxpVersion();
+  }
+
+  public class NxpNfcController {
+    ctor public NxpNfcController();
+    ctor public NxpNfcController(android.content.Context);
+    method public boolean commitOffHostService(int, java.lang.String, com.nxp.nfc.gsma.internal.NxpOffHostService);
+    method public boolean deleteOffHostService(int, java.lang.String, com.nxp.nfc.gsma.internal.NxpOffHostService);
+    method public boolean deleteOffHostService(java.lang.String, java.lang.String);
+    method public void enableMultiReception(java.lang.String, java.lang.String);
+    method public void enableNxpNfcController(com.nxp.nfc.gsma.internal.NxpNfcController.NxpCallbacks);
+    method public com.nxp.nfc.gsma.internal.NxpOffHostService getDefaultOffHostService(int, java.lang.String);
+    method public boolean getDefaultOffHostService(java.lang.String, com.nxp.nfc.gsma.internal.NxpNfcController.Callbacks);
+    method public java.util.ArrayList<com.nxp.nfc.gsma.internal.NxpOffHostService> getOffHostServices(int, java.lang.String);
+    method public boolean getOffHostServices(java.lang.String, com.nxp.nfc.gsma.internal.NxpNfcController.Callbacks);
+    method public boolean isNxpNfcEnabled();
+    field public static final int BATTERY_ALL_STATES = 2; // 0x2
+    field public static final int BATTERY_OPERATIONAL_STATE = 1; // 0x1
+    field public static final int PROTOCOL_ISO_DEP = 16; // 0x10
+    field public static final int SCREEN_ALL_MODES = 2; // 0x2
+    field public static final int SCREEN_ON_AND_LOCKED_MODE = 1; // 0x1
+    field public static final int TECHNOLOGY_NFC_A = 1; // 0x1
+    field public static final int TECHNOLOGY_NFC_B = 2; // 0x2
+    field public static final int TECHNOLOGY_NFC_F = 4; // 0x4
+  }
+
+  public static abstract interface NxpNfcController.Callbacks {
+  }
+
+  public static abstract interface NxpNfcController.NxpCallbacks {
+    method public abstract void onNxpEnableNfcController(boolean);
+  }
+
+  public class NxpOffHostService {
+    ctor public NxpOffHostService(int, java.lang.String, java.lang.String, java.lang.String, java.lang.String, boolean);
+    method public android.graphics.drawable.Drawable getBanner();
+    method public int getBannerId();
+    method public android.content.Context getContext();
+    method public java.lang.String getDescription();
+    method public java.lang.String getLocation();
+    method protected boolean getModifiable();
+    method protected java.lang.String getServiceName();
+    method public void setBanner(android.graphics.drawable.Drawable);
+    method public void setBannerId(int);
+    method public void setContext(android.content.Context);
+    method public void setNxpNfcController(com.nxp.nfc.gsma.internal.NxpNfcController);
+    field public java.util.List<android.nfc.cardemulation.AidGroup> mAidGroupList;
+    field public android.graphics.drawable.Drawable mBanner;
+    field public int mBannerId;
+    field public android.content.Context mContext;
+    field public java.lang.String mDescription;
+    field public boolean mModifiable;
+    field public com.nxp.nfc.gsma.internal.NxpNfcController mNxpNfcController;
+    field public java.lang.String mPackageName;
+    field public java.lang.String mSEName;
+    field public java.lang.String mServiceName;
+    field public int mUserId;
   }
 
 }
