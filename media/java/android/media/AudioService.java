@@ -254,7 +254,7 @@ public class AudioService extends IAudioService.Stub {
         5,  // STREAM_VOICE_CALL
         7,  // STREAM_SYSTEM
         7,  // STREAM_RING
-        15, // STREAM_MUSIC
+        99, // STREAM_MUSIC
         7,  // STREAM_ALARM
         7,  // STREAM_NOTIFICATION
         15, // STREAM_BLUETOOTH_SCO
@@ -264,16 +264,16 @@ public class AudioService extends IAudioService.Stub {
     };
 
     private static int[] DEFAULT_STREAM_VOLUME = new int[] {
-        4,  // STREAM_VOICE_CALL
-        7,  // STREAM_SYSTEM
-        5,  // STREAM_RING
-        11, // STREAM_MUSIC
-        6,  // STREAM_ALARM
-        5,  // STREAM_NOTIFICATION
-        7,  // STREAM_BLUETOOTH_SCO
-        7,  // STREAM_SYSTEM_ENFORCED
-        11, // STREAM_DTMF
-        11  // STREAM_TTS
+        3,  // STREAM_VOICE_CALL
+        3,  // STREAM_SYSTEM
+        3,  // STREAM_RING
+        10, // STREAM_MUSIC
+        3,  // STREAM_ALARM
+        3,  // STREAM_NOTIFICATION
+        3,  // STREAM_BLUETOOTH_SCO
+        3,  // STREAM_SYSTEM_ENFORCED
+        3, // STREAM_DTMF
+        3  // STREAM_TTS
     };
 
     /* mStreamVolumeAlias[] indicates for each stream if it uses the volume settings
