@@ -253,10 +253,10 @@ public class AudioService extends IAudioService.Stub {
     private static int[] MAX_STREAM_VOLUME = new int[] {
         5,  // STREAM_VOICE_CALL
         7,  // STREAM_SYSTEM
-        7,  // STREAM_RING
-        99, // STREAM_MUSIC
+        100,  // STREAM_RING
+        100, // STREAM_MUSIC
         7,  // STREAM_ALARM
-        7,  // STREAM_NOTIFICATION
+        100,  // STREAM_NOTIFICATION
         15, // STREAM_BLUETOOTH_SCO
         7,  // STREAM_SYSTEM_ENFORCED
         15, // STREAM_DTMF
@@ -266,10 +266,10 @@ public class AudioService extends IAudioService.Stub {
     private static int[] DEFAULT_STREAM_VOLUME = new int[] {
         3,  // STREAM_VOICE_CALL
         3,  // STREAM_SYSTEM
-        3,  // STREAM_RING
-        10, // STREAM_MUSIC
+        1,  // STREAM_RING
+        40, // STREAM_MUSIC
         3,  // STREAM_ALARM
-        3,  // STREAM_NOTIFICATION
+        30,  // STREAM_NOTIFICATION
         3,  // STREAM_BLUETOOTH_SCO
         3,  // STREAM_SYSTEM_ENFORCED
         3, // STREAM_DTMF
@@ -3320,7 +3320,7 @@ public class AudioService extends IAudioService.Stub {
                     AudioSystem.isStreamActive(AudioSystem.STREAM_RING,
                             StreamOverride.sDelayMs)) {
                 if (DEBUG_VOL) Log.v(TAG, "getActiveStreamType: Forcing STREAM_NOTIFICATION");
-                return AudioSystem.STREAM_NOTIFICATION;
+                return AudioSystem.STREAM_MUSIC;
             } else if (suggestedStreamType == AudioManager.USE_DEFAULT_STREAM_TYPE) {
                 if (isAfMusicActiveRecently(StreamOverride.sDelayMs)) {
                     if (DEBUG_VOL) Log.v(TAG, "getActiveStreamType: forcing STREAM_MUSIC");
@@ -3328,7 +3328,7 @@ public class AudioService extends IAudioService.Stub {
                 } else {
                     if (DEBUG_VOL) Log.v(TAG,
                             "getActiveStreamType: using STREAM_NOTIFICATION as default");
-                    return AudioSystem.STREAM_NOTIFICATION;
+                    return AudioSystem.STREAM_MUSIC;
                 }
             }
             break;
@@ -3552,7 +3552,14 @@ public class AudioService extends IAudioService.Stub {
                         continue;
                     }
 
+                // ignore settings for fixed volume devices: volume should always be at max or 0
+                if ((mStreamVolumeAlias[mStreamType] == AudioSystem.STREAM_MUSIC) &&
+                        ((device & mFixedVolumeDevices) != 0)) {
+                    mIndex.put(device, (index != 0) ? mIndexMax : 0);
+                } else {
                     mIndex.put(device, getValidIndex(10 * index));
+                }
+
                 }
             }
         }

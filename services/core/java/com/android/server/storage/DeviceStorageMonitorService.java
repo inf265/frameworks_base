@@ -83,7 +83,7 @@ public class DeviceStorageMonitorService extends SystemService {
     private static final int LOW_MEMORY_NOTIFICATION_ID = 1;
 
     private static final int DEFAULT_FREE_STORAGE_LOG_INTERVAL_IN_MINUTES = 12*60; //in minutes
-    private static final long DEFAULT_DISK_FREE_CHANGE_REPORTING_THRESHOLD = 2 * 1024 * 1024; // 2MB
+    private static final long DEFAULT_DISK_FREE_CHANGE_REPORTING_THRESHOLD = 10 * 1024 * 1024; // 2MB
     private static final long DEFAULT_CHECK_INTERVAL = MONITOR_INTERVAL*60*1000;
 
     private long mFreeMem;  // on /data
@@ -274,7 +274,7 @@ public class DeviceStorageMonitorService extends SystemService {
                         // We tried to clear the cache, but that didn't get us
                         // below the low storage limit.  Tell the user.
                         Slog.i(TAG, "Running low on memory. Sending notification");
-                        sendNotification();
+                        //sendNotification();
                         mLowMemFlag = true;
                     } else {
                         if (localLOGV) Slog.v(TAG, "Running low on memory " +
@@ -291,7 +291,7 @@ public class DeviceStorageMonitorService extends SystemService {
             }
             if (!mLowMemFlag && !mIsBootImageOnDisk) {
                 Slog.i(TAG, "No boot image on disk due to lack of space. Sending notification");
-                sendNotification();
+                //sendNotification();
             }
             if (mFreeMem < mMemFullThreshold) {
                 if (!mMemFullFlag) {

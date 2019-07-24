@@ -843,6 +843,32 @@ public final class PowerManagerService extends SystemService
         }
     }
 
+
+    void updateuserActivity() {
+            BackgroundThread.getHandler().post(new Runnable() {
+                @Override
+                public void run() {
+                    Intent intent = new Intent();
+					intent.setAction("userActivityNoUpdateLocked");
+                    mContext.sendBroadcast(intent);
+
+            }});
+        }
+    	
+    
+        void updateuserGoToSleep() {
+            BackgroundThread.getHandler().post(new Runnable() {
+                @Override
+                public void run() {
+                    Intent intent = new Intent();
+					intent.setAction("GoToSleep");
+                    mContext.sendBroadcast(intent);
+
+            }});
+        }
+        
+        
+        
     private void updateLowPowerModeLimitedFunctionsLocked(int limitedFunctions) {
         if (limitedFunctions != mLowPowerModeLimitedFunctions) {
             mLowPowerModeLimitedFunctions = limitedFunctions;
@@ -1168,6 +1194,9 @@ public final class PowerManagerService extends SystemService
             return false;
         }
 
+
+		//updateuserActivity();//phm, add
+
         Trace.traceBegin(Trace.TRACE_TAG_POWER, "userActivity");
         try {
             if (eventTime > mLastInteractivePowerHintTime) {
@@ -1361,6 +1390,8 @@ public final class PowerManagerService extends SystemService
             Slog.d(TAG, "reallyGoToSleepNoUpdateLocked: eventTime=" + eventTime
                     + ", uid=" + uid);
         }
+        
+  // updateuserGoToSleep();    //phm add
 
         if (eventTime < mLastWakeTime || mWakefulness == WAKEFULNESS_ASLEEP
                 || !mBootCompleted || !mSystemReady) {
@@ -1370,7 +1401,6 @@ public final class PowerManagerService extends SystemService
         Trace.traceBegin(Trace.TRACE_TAG_POWER, "reallyGoToSleep");
         try {
             Slog.i(TAG, "Sleeping (uid " + uid +")...");
-
             setWakefulnessLocked(WAKEFULNESS_ASLEEP, PowerManager.GO_TO_SLEEP_REASON_TIMEOUT);
         } finally {
             Trace.traceEnd(Trace.TRACE_TAG_POWER);
@@ -1759,8 +1789,10 @@ public final class PowerManagerService extends SystemService
     }
 
     private int getScreenDimDurationLocked(int screenOffTimeout) {
-        return Math.min(mMaximumScreenDimDurationConfig,
-                (int)(screenOffTimeout * mMaximumScreenDimRatioConfig));
+    	
+    	//Slog.i(TAG, " phm screenOffTimeout===..mSleepTimeoutSetting===."+screenOffTimeout+mSleepTimeoutSetting);
+        return screenOffTimeout/2;//Math.min(mMaximumScreenDimDurationConfig,
+                //(int)(screenOffTimeout * mMaximumScreenDimRatioConfig));
     }
 
     /**

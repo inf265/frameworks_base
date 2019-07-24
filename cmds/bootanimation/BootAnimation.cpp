@@ -71,7 +71,7 @@ const char* startup_ring = "/system/media/audio/startup.wav";
 #define SHUTDOWNMUSIC_FILE "/system/media/audio/shutdown.wav"
 const char* shutdown_ring = "/system/media/audio/shutdown.wav";
 #define USER_BOOTANIMATION_FILE "/data/local/bootanimation.zip"
-#define BOOTMUSIC_FILE "/system/media/audio/boot.ogg"
+#define BOOTMUSIC_FILE "/system/media/audio/startup.wav"
 #define USER_SHUTDOWN_ANIMATION_FILE "/data/local/shutdownanimation.zip"
 #define SYSTEM_SHUTDOWN_ANIMATION_FILE "/system/media/shutdownanimation.zip"
 extern "C" int clock_nanosleep(clockid_t clock_id, int flags,
@@ -119,6 +119,18 @@ BootAnimation::BootAnimation(bool shutdown) : Thread(false), mZip(NULL)
 	    }
     }
 }
+
+void BootAnimation::playMusic2()
+{
+  sp<MediaPlayer> mp = new MediaPlayer();
+    if ((0 == access(BOOTMUSIC_FILE, F_OK)) && mp != NULL) {
+        mp->setDataSource(NULL,BOOTMUSIC_FILE, NULL);
+        mp->prepare();
+        mp->start();
+		ALOGE(" play boot sounds: %s", BOOTMUSIC_FILE);
+    }
+}
+
 void BootAnimation::playMusic(){
 
     if(!mShutdown){
@@ -332,12 +344,12 @@ status_t BootAnimation::readyToRun() {
     int curWidth = dinfo.w;
     int curHeight = dinfo.h;
 
-    if (mShutdown) {
-	    if (dinfo.orientation % 2 == 0) {
-		    curWidth = dinfo.h;
-		    curHeight = dinfo.w;
-	    }
-    }
+   // if (mShutdown) {
+	 //   if (dinfo.orientation % 2 == 0) {
+		//    curWidth = dinfo.h;
+		//    curHeight = dinfo.w;
+	 //   }
+  //  }
 
     // create the native surface
     sp<SurfaceControl> control = session()->createSurface(String8("BootAnimation"),

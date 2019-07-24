@@ -31,7 +31,7 @@ import java.io.FileOutputStream;
 
 public class LightsService extends SystemService {
     static final String TAG = "LightsService";
-    static final boolean DEBUG = true; 
+    static final boolean DEBUG = false; 
 
     final LightImpl mLights[] = new LightImpl[LightsManager.LIGHT_ID_COUNT];
 

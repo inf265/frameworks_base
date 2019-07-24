@@ -1197,7 +1197,6 @@ public class PhoneWindowManager implements WindowManagerPolicy {
         }
         */
         		//phm add
-        		ifwake_home = false;
             mPowerKeyHandled = true;
             performHapticFeedbackLw(null, HapticFeedbackConstants.LONG_PRESS, false);
             sendCloseSystemWindows(SYSTEM_DIALOG_REASON_GLOBAL_ACTIONS);

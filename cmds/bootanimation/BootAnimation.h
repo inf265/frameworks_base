@@ -90,6 +90,7 @@ private:
     void getTexCoordinate();
     void checkExit();
     void playMusic();
+    void playMusic2();
     /**
      * 返回给定 fd 的文件的大小.
      */
