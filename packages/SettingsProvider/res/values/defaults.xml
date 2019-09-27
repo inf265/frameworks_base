@@ -60,8 +60,8 @@
     -->
     <string name="def_location_providers_allowed" translatable="false">gps</string>
     <string name="def_location_providers_allowed_network" translatable="false">network</string>
-    <bool name="assisted_gps_enabled">true</bool>
-    <bool name="def_netstats_enabled">true</bool>
+    <bool name="assisted_gps_enabled">false</bool>
+    <bool name="def_netstats_enabled">false</bool>
     <bool name="def_usb_mass_storage_enabled">true</bool>
     <bool name="def_wifi_on">false</bool>
     <!-- 0 == never, 1 == only when plugged in, 2 == always -->
@@ -81,14 +81,14 @@
     <bool name="def_mount_ums_notify_enabled">true</bool>
 
     <!-- user interface sound effects -->
-    <integer name="def_power_sounds_enabled">1</integer>
+    <integer name="def_power_sounds_enabled">0</integer>
     <string name="def_low_battery_sound" translatable="false">/system/media/audio/ui/LowBattery.ogg</string>
     <integer name="def_dock_sounds_enabled">0</integer>
     <string name="def_desk_dock_sound" translatable="false">/system/media/audio/ui/Dock.ogg</string>
     <string name="def_desk_undock_sound" translatable="false">/system/media/audio/ui/Undock.ogg</string>
     <string name="def_car_dock_sound" translatable="false">/system/media/audio/ui/Dock.ogg</string>
     <string name="def_car_undock_sound" translatable="false">/system/media/audio/ui/Undock.ogg</string>
-    <integer name="def_lockscreen_sounds_enabled">1</integer>
+    <integer name="def_lockscreen_sounds_enabled">0</integer>
     <string name="def_lock_sound" translatable="false">/system/media/audio/ui/Lock.ogg</string>
     <string name="def_unlock_sound" translatable="false">/system/media/audio/ui/Unlock.ogg</string>
     <string name="def_trusted_sound" translatable="false">/system/media/audio/ui/Trusted.ogg</string>
@@ -102,7 +102,7 @@
     <bool name="def_notifications_use_ring_volume">true</bool>
 
     <!-- Default for Settings.System.VIBRATE_IN_SILENT -->
-    <bool name="def_vibrate_in_silent">true</bool>
+    <bool name="def_vibrate_in_silent">false</bool>
 
     <!-- Default for Settings.Secure.ACCESSIBILITY_SCRIPT_INJECTION -->
     <bool name="def_accessibility_script_injection">false</bool>

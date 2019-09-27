@@ -615,7 +615,7 @@ public class StorageManager {
     }
 
     private static final int DEFAULT_THRESHOLD_PERCENTAGE = 10;
-    private static final long DEFAULT_THRESHOLD_MAX_BYTES = 500 * MB_IN_BYTES;
+    private static final long DEFAULT_THRESHOLD_MAX_BYTES = 100 * MB_IN_BYTES;
     private static final long DEFAULT_FULL_THRESHOLD_BYTES = MB_IN_BYTES;
 
     /**

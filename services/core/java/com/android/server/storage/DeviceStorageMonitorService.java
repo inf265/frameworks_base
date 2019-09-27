@@ -83,9 +83,9 @@ public class DeviceStorageMonitorService extends SystemService {
     private static final int LOW_MEMORY_NOTIFICATION_ID = 1;
 
     private static final int DEFAULT_FREE_STORAGE_LOG_INTERVAL_IN_MINUTES = 12*60; //in minutes
-    private static final long DEFAULT_DISK_FREE_CHANGE_REPORTING_THRESHOLD = 10 * 1024 * 1024; // 2MB
+    private static final long DEFAULT_DISK_FREE_CHANGE_REPORTING_THRESHOLD = 2 * 1024 * 1024; // 2MB
     private static final long DEFAULT_CHECK_INTERVAL = MONITOR_INTERVAL*60*1000;
-
+		private static final long DEFAULT_CHECK_INTERVAL_30 = MONITOR_INTERVAL*30*1000;
     private long mFreeMem;  // on /data
     private long mFreeMemAfterLastCacheClear;  // on /data
     private long mLastReportedFreeMem;
@@ -228,7 +228,7 @@ public class DeviceStorageMonitorService extends SystemService {
             mClearSucceeded = false;
         }
     }
-
+		int iflowmen_time =0;
     void checkMemory(boolean checkCache) {
         //if the thread that was started to clear cache is still running do nothing till its
         //finished clearing cache. Ideally this flag could be modified by clearCache
@@ -243,10 +243,12 @@ public class DeviceStorageMonitorService extends SystemService {
             }
         } else {
             restatDataDir();
-            if (localLOGV)  Slog.v(TAG, "freeMemory="+mFreeMem);
+           // if (localLOGV) 
+             Slog.v(TAG, "freeMemory="+mFreeMem);
 
             //post intent to NotificationManager to display icon if necessary
             if (mFreeMem < mMemLowThreshold) {
+            	iflowmen_time =1;
                 if (checkCache) {
                     // We are allowed to clear cache files at this point to
                     // try to get down below the limit, because this is not
@@ -266,22 +268,25 @@ public class DeviceStorageMonitorService extends SystemService {
                             clearCache();
                         }
                     }
-                } else {
+                } 
+                
+                //else {
                     // This is a call from after clearing the cache.  Note
                     // the amount of free storage at this point.
                     mFreeMemAfterLastCacheClear = mFreeMem;
-                    if (!mLowMemFlag) {
+                  //  if (!mLowMemFlag) {
                         // We tried to clear the cache, but that didn't get us
                         // below the low storage limit.  Tell the user.
                         Slog.i(TAG, "Running low on memory. Sending notification");
-                        //sendNotification();
+                        sendNotification();
                         mLowMemFlag = true;
-                    } else {
-                        if (localLOGV) Slog.v(TAG, "Running low on memory " +
-                                "notification already sent. do nothing");
-                    }
-                }
+                    //} else {
+                     //   if (localLOGV) Slog.v(TAG, "Running low on memory " +
+                        //        "notification already sent. do nothing");
+                   // }
+               // }
             } else {
+            		iflowmen_time = 0;
                 mFreeMemAfterLastCacheClear = mFreeMem;
                 if (mLowMemFlag) {
                     Slog.i(TAG, "Memory available. Cancelling notification");
@@ -291,7 +296,7 @@ public class DeviceStorageMonitorService extends SystemService {
             }
             if (!mLowMemFlag && !mIsBootImageOnDisk) {
                 Slog.i(TAG, "No boot image on disk due to lack of space. Sending notification");
-                //sendNotification();
+                sendNotification();
             }
             if (mFreeMem < mMemFullThreshold) {
                 if (!mMemFullFlag) {
@@ -307,7 +312,10 @@ public class DeviceStorageMonitorService extends SystemService {
         }
         if(localLOGV) Slog.i(TAG, "Posting Message again");
         //keep posting messages to itself periodically
+        if(iflowmen_time==0)
         postCheckMemoryMsg(true, DEFAULT_CHECK_INTERVAL);
+        else
+        postCheckMemoryMsg(true, DEFAULT_CHECK_INTERVAL_30);
     }
 
     void postCheckMemoryMsg(boolean clearCache, long delay) {
@@ -483,8 +491,8 @@ public class DeviceStorageMonitorService extends SystemService {
                 .setCategory(Notification.CATEGORY_SYSTEM)
                 .build();
         notification.flags |= Notification.FLAG_NO_CLEAR;
-        mNotificationMgr.notifyAsUser(null, LOW_MEMORY_NOTIFICATION_ID, notification,
-                UserHandle.ALL);
+       // mNotificationMgr.notifyAsUser(null, LOW_MEMORY_NOTIFICATION_ID, notification,
+         //       UserHandle.ALL);
         context.sendStickyBroadcastAsUser(mStorageLowIntent, UserHandle.ALL);
     }
 
