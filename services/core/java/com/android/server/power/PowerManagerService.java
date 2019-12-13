@@ -97,7 +97,7 @@ public final class PowerManagerService extends SystemService
         implements Watchdog.Monitor {
     private static final String TAG = "PowerManagerService";
 
-    private static final boolean DEBUG = false;
+    private static final boolean DEBUG = true;
     private static final boolean DEBUG_SPEW = DEBUG && true;
 
     // Message: Sent when a user activity timeout occurs to update the power state.
@@ -179,6 +179,11 @@ public final class PowerManagerService extends SystemService
     private SettingsObserver mSettingsObserver;
     private DreamManagerInternal mDreamManager;
     private Light mAttentionLight;
+
+
+		String ACTION_SCREEN_DIMS = "tiger_box.intent.action.SCREEN_DIMS";
+		String ACTION_SCREEN_DIMS_OUT = "tiger_box.intent.action.SCREEN_DIMS_OUT";
+
 
     private final Object mLock = new Object();
 
@@ -854,8 +859,31 @@ public final class PowerManagerService extends SystemService
 
             }});
         }
-    	
+  
+      void yfdimsActivity() {
+            BackgroundThread.getHandler().post(new Runnable() {
+                @Override
+                public void run() {
+                    Intent intent = new Intent();
+					intent.setAction(ACTION_SCREEN_DIMS);
+					intent.putExtra("screen_dims_status",true);
+                    mContext.sendBroadcast(intent);
+
+            }});
+        }	
     
+        void yfdimsActivityout() {
+            BackgroundThread.getHandler().post(new Runnable() {
+                @Override
+                public void run() {
+                    Intent intent = new Intent();
+					intent.setAction(ACTION_SCREEN_DIMS);
+					intent.putExtra("screen_dims_status",false);
+                    mContext.sendBroadcast(intent);
+
+            }});
+        }	
+          
         void updateuserGoToSleep() {
             BackgroundThread.getHandler().post(new Runnable() {
                 @Override
@@ -1668,7 +1696,7 @@ public final class PowerManagerService extends SystemService
             }
         }
     }
-
+int isdim =0;
     /**
      * Updates the value of mUserActivitySummary to summarize the user requested
      * state of the system such as whether the screen should be bright or dim.
@@ -1744,6 +1772,21 @@ public final class PowerManagerService extends SystemService
                         + ", mUserActivitySummary=0x" + Integer.toHexString(mUserActivitySummary)
                         + ", nextTimeout=" + TimeUtils.formatUptime(nextTimeout));
             }
+            
+            if(mUserActivitySummary == USER_ACTIVITY_SCREEN_DIM)
+            {
+            	isdim = 1;
+            yfdimsActivity();
+          }
+            else
+            {
+            	if(isdim==1)
+            yfdimsActivityout();
+            
+            isdim =0;
+          }
+            
+            //phm add
         }
     }
 
@@ -1790,7 +1833,15 @@ public final class PowerManagerService extends SystemService
 
     private int getScreenDimDurationLocked(int screenOffTimeout) {
     	
-    	//Slog.i(TAG, " phm screenOffTimeout===..mSleepTimeoutSetting===."+screenOffTimeout+mSleepTimeoutSetting);
+    	Slog.i(TAG, " phm screenOffTimeout===..mSleepTimeoutSetting===."+screenOffTimeout+mSleepTimeoutSetting);
+    	 if(screenOffTimeout==150000)
+    		return 120000;
+    		
+    	 else if(screenOffTimeout==300000)
+    		return 180000;
+    		
+        else 
+        
         return screenOffTimeout/2;//Math.min(mMaximumScreenDimDurationConfig,
                 //(int)(screenOffTimeout * mMaximumScreenDimRatioConfig));
     }
