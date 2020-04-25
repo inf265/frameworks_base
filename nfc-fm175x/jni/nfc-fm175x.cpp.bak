@@ -49,8 +49,8 @@ JNIEXPORT jint JNICALL Java_com_yf_lib_tigerbox_tigertones_NativeHelper_read(JNI
 	jbyte *pBuffer=env->GetByteArrayElements(buffer,NULL);
 	ret=read(fd,pBuffer,length);
 	env->ReleaseByteArrayElements(buffer,pBuffer,0);
-	__android_log_print(ANDROID_LOG_INFO, "mf175x", "length=%d",length);
-	__android_log_print(ANDROID_LOG_INFO, "mf175x", "ret=%d",ret);
+	//__android_log_print(ANDROID_LOG_INFO, "mf175x", "length=%d",length);
+	//__android_log_print(ANDROID_LOG_INFO, "mf175x", "ret=%d",ret);
 	return ret;
 }
 

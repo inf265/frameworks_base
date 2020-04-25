@@ -22,8 +22,8 @@ JNIEXPORT jint JNICALL Java_com_yf_lib_tigerbox_tigertones_NativeHelper_open(JNI
 	int f_flags;
 	
 	if(fd<=0)fd = open("/dev/mf175x",O_RDWR);
-	if(fd <=0 )__android_log_print(ANDROID_LOG_INFO, "mf175x", "open /dev/mf175x Error");
-	else __android_log_print(ANDROID_LOG_INFO, "mf175x", "open /dev/mf175x Sucess fd=%d",fd);
+	//if(fd <=0 )__android_log_print(ANDROID_LOG_INFO, "mf175x", "open /dev/mf175x Error");
+	//else __android_log_print(ANDROID_LOG_INFO, "mf175x", "open /dev/mf175x Sucess fd=%d",fd);
 		
     
 	return fd;
