@@ -9930,6 +9930,8 @@ public class WindowManagerService extends IWindowManager.Stub
         } else {
             Log.i(TAG, "SAFE MODE not enabled");
         }
+        
+        mSafeMode = false;
         mPolicy.setSafeMode(mSafeMode);
         return mSafeMode;
     }

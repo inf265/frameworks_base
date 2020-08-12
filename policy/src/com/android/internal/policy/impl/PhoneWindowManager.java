@@ -2991,10 +2991,20 @@ public class PhoneWindowManager implements WindowManagerPolicy {
                Intent intent = new Intent();  
                 intent.setAction("org.huiyu.honeybot.action.ReadButton");
                 mContext.sendBroadcast(intent);
-                Log.d("phm---------","KEYCODE_PICTSYMBOLS");
+                Log.d("phm---------","org.huiyu.honeybot.action.ReadButton");
             }
             return -1;
         }
+ 	else if (keyCode == KeyEvent.KEYCODE_F3) {
+            if (down) {
+               Intent intent = new Intent();  
+                intent.setAction("com.android.bts84.Abnormal_current");
+                mContext.sendBroadcast(intent);
+                Log.d("phm---------","com.android.bts84.Abnormal_current");
+            }
+            return -1;
+        }       
+        
 	else if (keyCode == KeyEvent.KEYCODE_SWITCH_CHARSET) {
             if (down && aaa==0)
              {
